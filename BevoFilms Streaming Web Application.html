@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BevoFilms - Stream Kinyarwanda Translated Movies & Series</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bevo: {
+                            bg: '#0d0e12',
+                            card: '#15171e',
+                            cardHover: '#1f222c',
+                            red: '#e50914',
+                            darkRed: '#b81d24',
+                            accent: '#00f0ff',
+                            textMuted: '#9ca3af'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0d0e12;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Glowing Rainbow Effects */
+        .neon-glow-logo {
+            filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.6)) drop-shadow(0 0 12px rgba(229, 9, 20, 0.5));
+        }
+        .active-tab {
+            color: #e50914;
+            border-bottom: 2px solid #e50914;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0e12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232733;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e50914;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-bevo-bg text-white min-h-screen flex flex-col justify-between antialiased selection:bg-bevo-red selection:text-white">
+
+    <!-- HEADER NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-bevo-bg/95 backdrop-blur-md border-b border-zinc-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand Name -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <!-- Inline Recreated Glowing Rainbow Hexagon SVG Logo -->
+                    <svg class="w-11 h-11 neon-glow-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffff"/>
+                                <stop offset="25%" stop-color="#0088ff"/>
+                                <stop offset="50%" stop-color="#aa00ff"/>
+                                <stop offset="75%" stop-color="#ff0055"/>
+                                <stop offset="100%" stop-color="#ffaa00"/>
+                            </linearGradient>
+                            <linearGradient id="innerGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffff"/>
+                                <stop offset="50%" stop-color="#ff0088"/>
+                                <stop offset="100%" stop-color="#ffea00"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Outer Hexagon Frame -->
+                        <polygon points="100,10 178,55 178,145 100,190 22,145 22,55" stroke="url(#rainbowGrad)" stroke-width="8" fill="#10121a"/>
+                        <!-- Inner Geometric Star Lines -->
+                        <polygon points="100,10 178,145 22,145" stroke="url(#rainbowGrad)" stroke-width="3" fill="none" opacity="0.6"/>
+                        <polygon points="100,190 178,55 22,55" stroke="url(#rainbowGrad)" stroke-width="3" fill="none" opacity="0.6"/>
+                        <!-- Center Glowing Hexagon -->
+                        <polygon points="100,60 135,80 135,120 100,140 65,120 65,80" stroke="url(#innerGrad)" stroke-width="5" fill="#0b0d13"/>
+                        <polygon points="100,75 120,87 120,113 100,125 80,113 80,87" fill="url(#rainbowGrad)" opacity="0.8"/>
+                    </svg>
+
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-black tracking-wider text-white leading-none">BEVO<span class="text-bevo-red">FILMS</span></span>
+                        <span class="text-[10px] text-zinc-400 font-medium tracking-widest uppercase">Stream Translated Movies</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-8 font-semibold text-sm">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn py-7 active-tab transition-colors">Home</button>
+                    <button onclick="switchTab('series')" id="nav-series" class="nav-btn py-7 text-gray-400 hover:text-white transition-colors">Series</button>
+                    <button onclick="switchTab('movies')" id="nav-movies" class="nav-btn py-7 text-gray-400 hover:text-white transition-colors">Movies</button>
+                    <button onclick="switchTab('interpret')" id="nav-interpret" class="nav-btn py-7 text-gray-400 hover:text-white transition-colors">Interpret</button>
+                    <button onclick="switchTab('library')" id="nav-library" class="nav-btn py-7 text-gray-400 hover:text-white transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-star text-yellow-500"></i> Starred
+                    </button>
+                </nav>
+
+                <!-- Search Input -->
+                <div class="relative w-40 sm:w-64">
+                    <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search movie or translator..." class="w-full bg-bevo-card text-xs text-white placeholder-zinc-500 pl-9 pr-4 py-2.5 rounded-full border border-zinc-700/60 focus:outline-none focus:border-bevo-red transition-all shadow-inner">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-xs text-zinc-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom Nav -->
+        <div class="md:hidden flex justify-around bg-zinc-950 border-t border-zinc-800 py-2.5 text-xs font-medium">
+            <button onclick="switchTab('home')" id="mob-nav-home" class="flex flex-col items-center gap-1 text-bevo-red">
+                <i class="fa-solid fa-house text-sm"></i> Home
+            </button>
+            <button onclick="switchTab('series')" id="mob-nav-series" class="flex flex-col items-center gap-1 text-zinc-400">
+                <i class="fa-solid fa-tv text-sm"></i> Series
+            </button>
+            <button onclick="switchTab('movies')" id="mob-nav-movies" class="flex flex-col items-center gap-1 text-zinc-400">
+                <i class="fa-solid fa-film text-sm"></i> Movies
+            </button>
+            <button onclick="switchTab('interpret')" id="mob-nav-interpret" class="flex flex-col items-center gap-1 text-zinc-400">
+                <i class="fa-solid fa-microphone text-sm"></i> Interpret
+            </button>
+            <button onclick="switchTab('library')" id="mob-nav-library" class="flex flex-col items-center gap-1 text-zinc-400">
+                <i class="fa-solid fa-star text-yellow-500 text-sm"></i> Library
+            </button>
+        </div>
+    </header>
+
+    <!-- WHATSAPP BANNER LINK -->
+    <div class="bg-gradient-to-r from-emerald-950 via-zinc-900 to-zinc-950 border-b border-emerald-800/40 py-2.5 px-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs sm:text-sm text-center sm:text-left">
+            <div class="flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-emerald-400 text-xl animate-pulse"></i>
+                <span>Ibipya muri <strong>BevoFilms</strong> zigusanga kuri <strong>WhatsApp Channel</strong> yacu!</span>
+            </div>
+            <a href="https://whatsapp.com/channel/0029Vb98arsLSmbg40wYXh0A" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-full transition-all text-xs flex items-center gap-1.5 shadow-md">
+                Kora Join Channel <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN BODY CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- SEARCH RESULTS PANEL -->
+        <section id="search-section" class="hidden mb-10">
+            <div class="flex items-center justify-between mb-4 border-l-4 border-bevo-red pl-3">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-bevo-red"></i> Search Results
+                </h2>
+                <button onclick="clearSearch()" class="text-xs text-zinc-400 hover:text-white bg-zinc-800 px-3 py-1 rounded-full">Clear Search</button>
+            </div>
+            <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+        </section>
+
+        <!-- VIEW 1: HOME PAGE -->
+        <div id="view-home" class="space-y-10">
+            <!-- 5-SECOND AUTOMATIC FEATURED FILMS SLIDER -->
+            <section class="relative rounded-2xl overflow-hidden bg-bevo-card border border-zinc-800/80 shadow-2xl h-[340px] sm:h-[440px]">
+                <div id="featured-slide-container" class="relative w-full h-full"></div>
+                <!-- Slider Indicators -->
+                <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2" id="slider-indicators"></div>
+            </section>
+
+            <!-- NEW RELEASES GRID -->
+            <section>
+                <div class="flex items-center justify-between mb-5 border-l-4 border-bevo-red pl-3">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white">Filime Nshya Zije</h2>
+                        <p class="text-xs text-zinc-400">Filime n'amaserie ziheruka kusobanurwa muri BevoFilms</p>
+                    </div>
+                </div>
+
+                <div id="recent-releases-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"></div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: SERIES PAGE -->
+        <div id="view-series" class="hidden space-y-6">
+            <div class="border-l-4 border-bevo-red pl-3">
+                <h2 class="text-2xl font-extrabold text-white">Series Zose</h2>
+                <p class="text-xs text-zinc-400">Hitamo Series uze kureba ibice byose (Seasons & Episodes)</p>
+            </div>
+            <div id="series-releases-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"></div>
+        </div>
+
+        <!-- VIEW 3: MOVIES PAGE -->
+        <div id="view-movies" class="hidden space-y-6">
+            <div class="border-l-4 border-bevo-red pl-3">
+                <h2 class="text-2xl font-extrabold text-white">Movies Zose</h2>
+                <p class="text-xs text-zinc-400">Filime z'ikinecurano zuzuye (Standalone Movies)</p>
+            </div>
+            <div id="movies-releases-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"></div>
+        </div>
+
+        <!-- VIEW 4: INTERPRET PAGE (Strictly TEXT-ONLY, NO PHOTOS as per PDF specification) -->
+        <div id="view-interpret" class="hidden space-y-6">
+            <div class="border-l-4 border-bevo-red pl-3">
+                <h2 class="text-2xl font-extrabold text-white">Abasobanuzi (Interpreters)</h2>
+                <p class="text-xs text-zinc-400">Urutonde rw'abasobanuzi bose babarizwa muri BevoFilms</p>
+            </div>
+
+            <!-- PDF Notice Banner -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-xs text-zinc-400 flex items-center gap-3">
+                <i class="fa-solid fa-shield-halved text-bevo-red text-lg"></i>
+                <span>Amafoto y'abasobanuzi ntagaragara kuri BevoFilms k'ubw'amasezerano no kumpamvu z'umutekano. Hitamo umusobanuzi urebe filime ze.</span>
+            </div>
+
+            <div id="interpreters-list-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- VIEW 5: STARRED LIBRARY PAGE -->
+        <div id="view-library" class="hidden space-y-6">
+            <div class="border-l-4 border-yellow-500 pl-3">
+                <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-star text-yellow-500"></i> Starred Library
+                </h2>
+                <p class="text-xs text-zinc-400">Filime wamaze guha akamenyetso ka Star</p>
+            </div>
+            <div id="library-releases-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"></div>
+        </div>
+
+        <!-- VIEW 6: PLAY / MOVIE DETAIL VIEW -->
+        <div id="view-play" class="hidden space-y-6">
+            <button onclick="switchTab('home')" class="bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold px-4 py-2 rounded-lg text-zinc-300 flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Subira Inyuma
+            </button>
+
+            <!-- Video Player Screen -->
+            <div class="bg-black aspect-video w-full rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
+                <video id="main-video-player" controls controlsList="nodownload" class="w-full h-full object-cover">
+                    <source id="video-source" src="" type="video/mp4">
+                    Browser yawe ntiyemera kureba iyi video.
+                </video>
+            </div>
+
+            <!-- Play Controls & Details -->
+            <div class="bg-bevo-card border border-zinc-800 rounded-2xl p-5 sm:p-7 space-y-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span id="play-type-badge" class="bg-bevo-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Movie</span>
+                            <span id="play-translator-badge" class="bg-zinc-800 text-zinc-300 text-xs px-2.5 py-0.5 rounded flex items-center gap-1 border border-zinc-700">
+                                <i class="fa-solid fa-microphone text-bevo-red text-[10px]"></i> <span id="play-translator-name">Translator</span>
+                            </span>
+                        </div>
+                        <h1 id="play-title" class="text-2xl sm:text-4xl font-extrabold text-white">Title</h1>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center gap-2.5">
+                        <button id="play-star-btn" onclick="toggleCurrentStar()" class="bg-zinc-800 hover:bg-zinc-700 text-yellow-500 font-medium px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all border border-zinc-700">
+                            <i id="play-star-icon" class="fa-regular fa-star"></i> Star
+                        </button>
+                        <button onclick="shareCurrentContent()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-medium px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all border border-zinc-700">
+                            <i class="fa-solid fa-share-nodes text-bevo-accent"></i> Share
+                        </button>
+                        <a id="play-download-btn" href="#" download target="_blank" class="bg-bevo-red hover:bg-bevo-darkRed text-white font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg shadow-bevo-red/20">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- EPISODE SELECTOR FOR SERIES (If type == 'series') -->
+                <div id="series-episodes-wrapper" class="hidden bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-bevo-red"></i> Hitamo Season n'Episode
+                        </h3>
+                        <span id="episodes-count-badge" class="text-xs text-zinc-400">0 Episodes</span>
+                    </div>
+                    <div id="episodes-buttons-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-52 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Ibisobanuro (Description)</h4>
+                    <p id="play-description" class="text-xs sm:text-sm text-zinc-300 leading-relaxed">Description goes here...</p>
+                </div>
+
+                <!-- RECOMMENDED CONTENT -->
+                <div class="border-t border-zinc-800/80 pt-6">
+                    <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-thumbs-up text-bevo-red"></i> Filime Zishinganishijwe (Recommended)
+                    </h3>
+                    <div id="recommended-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+                </div>
+
+                <!-- COMMENTS SECTION -->
+                <div class="border-t border-zinc-800/80 pt-6 space-y-4">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-bevo-red"></i> Ibitecyerezo (Comments)
+                    </h3>
+
+                    <!-- Comment Input -->
+                    <form onsubmit="handlePostComment(event)" class="flex gap-2">
+                        <input type="text" id="comment-input" required placeholder="Andika igitecyerezo cyawe hano..." class="flex-grow bg-zinc-900 text-xs text-white placeholder-zinc-500 px-4 py-3 rounded-xl border border-zinc-800 focus:outline-none focus:border-bevo-red">
+                        <button type="submit" class="bg-bevo-red hover:bg-bevo-darkRed text-white text-xs font-bold px-5 py-3 rounded-xl transition-all">
+                            Ohereza
+                        </button>
+                    </form>
+
+                    <!-- Comments List -->
+                    <div id="comments-container" class="space-y-3 max-h-52 overflow-y-auto pr-1"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-8 mt-12 text-zinc-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+            <div class="flex items-center gap-2">
+                <svg class="w-7 h-7" viewBox="0 0 200 200" fill="none">
+                    <polygon points="100,10 178,55 178,145 100,190 22,145 22,55" stroke="#e50914" stroke-width="12" fill="none"/>
+                    <polygon points="100,60 135,80 135,120 100,140 65,120 65,80" fill="#00ffff"/>
+                </svg>
+                <span class="text-base font-extrabold text-white">BEVO<span class="text-bevo-red">FILMS</span></span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 text-zinc-400">
+                <button onclick="switchTab('home')" class="hover:text-white">Home</button>
+                <button onclick="switchTab('series')" class="hover:text-white">Series</button>
+                <button onclick="switchTab('movies')" class="hover:text-white">Movies</button>
+                <button onclick="switchTab('interpret')" class="hover:text-white">Interpret</button>
+                <button onclick="switchTab('library')" class="hover:text-white">Library</button>
+            </div>
+            <div class="text-zinc-600">
+                &copy; 2026 BevoFilms. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INLINE JAVASCRIPT LOGIC & STATE STORAGE -->
+    <script>
+        // MOCK DATABASE ACCORDING TO PDF SPECIFICATION
+        const MOCK_DATA = [
+            {
+                id: 'film-1',
+                title: 'Rocky: Season 1',
+                translator: 'Rocky Kirabiranya',
+                type: 'series',
+                imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+                description: 'Inkuru y\'umurwanyi Rocky mu rugamba rwo gutsinda no gushaka icyubahiro muri mugi wa Philadelphia.',
+                isFeatured: true,
+                episodes: [
+                    { season: 1, episode: 1, title: 'Episode 1: Intangiriro', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4' },
+                    { season: 1, episode: 2, title: 'Episode 2: Urugamba', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' },
+                    { season: 1, episode: 3, title: 'Episode 3: Ikirere', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }
+                ]
+            },
+            {
+                id: 'film-2',
+                title: 'The Black Panther: Wakanda Forever',
+                translator: 'Sankara',
+                type: 'movie',
+                imageUrl: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+                description: 'Abaturage b\'i Wakanda barwanira kurinda igihugu cyabo nyuma y\'urupfu rwo mwami T\'Challa.',
+                isFeatured: true
+            },
+            {
+                id: 'film-3',
+                title: 'John Wick: Chapter 4',
+                translator: 'Yuri Boyka',
+                type: 'movie',
+                imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                description: 'John Wick abona inzira yo gutsinda High Table, ariko agomba guhangana n\'umwanzi mushya ufite inshuti ku isi yose.',
+                isFeatured: true
+            },
+            {
+                id: 'film-4',
+                title: 'Vikings: Valhalla',
+                translator: 'Junior Giti',
+                type: 'series',
+                imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                description: 'Urugendo rw\'aba Viking bazwi cyane mu mateka barwanira icyubahiro n\'ubutaka bundi.',
+                isFeatured: true,
+                episodes: [
+                    { season: 1, episode: 1, title: 'Episode 1: Kattegat', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
+                    { season: 1, episode: 2, title: 'Episode 2: London Siege', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4' }
+                ]
+            },
+            {
+                id: 'film-5',
+                title: 'Fast X',
+                translator: 'Rocky Boss',
+                type: 'movie',
+                imageUrl: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                description: 'Dom Toretto n\'umuryango we bahangana n\'umwanzi ubabihije wakuze ashaka guhorera se.',
+                isFeatured: true
+            },
+            {
+                id: 'film-6',
+                title: 'Extraction 2',
+                translator: 'Sankara',
+                type: 'movie',
+                imageUrl: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=600&auto=format&fit=crop&q=80',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+                description: 'Tyler Rake arakora inshingano nshya zo kurokora umuryango w\'umugizi wa nabi ukomeye.',
+                isFeatured: false
+            }
+        ];
+
+        // TRANSLATORS DIRECTORY (NO PHOTOS PER SPECIFICATION)
+        const INTERPRETERS = [
+            { name: 'Rocky Kirabiranya', bio: 'Umusobanuzi wa mbere mu filime z\'imirwano na action.' },
+            { name: 'Yuri Boyka', bio: 'Umusobanuzi w\'intangarugero mu gukurura abareba amaserie magufi.' },
+            { name: 'Junior Giti', bio: 'Umusobanuzi ufite uburyo bukirobye bwo gushyiramo urwenya.' },
+            { name: 'Rocky Boss', bio: 'Zwi cyane mu gusobanura filime z\'ubwoba na sci-fi.' }
+        ];
+
+        // STATE MANAGEMENT
+        let activeTab = 'home';
+        let currentContent = null;
+        let sliderInterval = null;
+        let currentSlideIndex = 0;
+        let starredIds = JSON.parse(localStorage.getItem('bevo_starred_list')) || ['film-1', 'film-3'];
+        let commentsDatabase = JSON.parse(localStorage.getItem('bevo_comments')) || {
+            'film-1': [{ user: 'Eric', text: 'Rocky irashyushye cyane!' }],
+            'film-2': [{ user: 'Clarisse', text: 'Sankara yayisobanuye neza!' }]
+        };
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderFeaturedSlider();
+            startAutoSlider();
+            renderGrids();
+            renderInterpreters();
+        };
+
+        // TAB NAVIGATION SWITCHING
+        function switchTab(tabName) {
+            activeTab = tabName;
+            
+            // Hide all tab views
+            ['home', 'series', 'movies', 'interpret', 'library', 'play'].forEach(tab => {
+                const el = document.getElementById(`view-${tab}`);
+                if (el) el.classList.add('hidden');
+                
+                // Desktop Buttons
+                const desktopBtn = document.getElementById(`nav-${tab}`);
+                if (desktopBtn) {
+                    desktopBtn.classList.remove('active-tab');
+                    desktopBtn.classList.add('text-gray-400');
+                }
+
+                // Mobile Buttons
+                const mobBtn = document.getElementById(`mob-nav-${tab}`);
+                if (mobBtn) {
+                    mobBtn.classList.remove('text-bevo-red');
+                    mobBtn.classList.add('text-zinc-400');
+                }
+            });
+
+            // Show selected view
+            const activeView = document.getElementById(`view-${tabName}`);
+            if (activeView) activeView.classList.remove('hidden');
+
+            // Highlight Active Desktop Button
+            const activeDesktopBtn = document.getElementById(`nav-${tabName}`);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.classList.add('active-tab');
+                activeDesktopBtn.classList.remove('text-gray-400');
+            }
+
+            // Highlight Active Mobile Button
+            const activeMobBtn = document.getElementById(`mob-nav-${tabName}`);
+            if (activeMobBtn) {
+                activeMobBtn.classList.add('text-bevo-red');
+                activeMobBtn.classList.remove('text-zinc-400');
+            }
+
+            // Refresh library grid if navigated to
+            if (tabName === 'library') {
+                renderLibraryGrid();
+            }
+
+            // Pause Video if leaving play view
+            if (tabName !== 'play') {
+                const videoPlayer = document.getElementById('main-video-player');
+                if (videoPlayer) videoPlayer.pause();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 5-SECOND ROTATING HERO FEATURED SLIDER
+        function renderFeaturedSlider() {
+            const featuredList = MOCK_DATA.filter(item => item.isFeatured).slice(0, 5);
+            const container = document.getElementById('featured-slide-container');
+            const indicators = document.getElementById('slider-indicators');
+            
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+
+            featuredList.forEach((item, index) => {
+                // Slide Item
+                const slide = document.createElement('div');
+                slide.className = `absolute inset-0 transition-opacity duration-700 ease-in-out ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+                slide.id = `featured-slide-${index}`;
+                slide.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-bevo-card via-bevo-card/60 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 max-w-xl space-y-3 z-20">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-bevo-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Featured #5</span>
+                            <span class="bg-black/60 backdrop-blur-md text-zinc-300 text-xs px-2.5 py-0.5 rounded border border-white/10">
+                                <i class="fa-solid fa-microphone text-bevo-red mr-1"></i> ${item.translator}
+                            </span>
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold text-white line-clamp-1">${item.title}</h2>
+                        <p class="text-xs sm:text-sm text-zinc-300 line-clamp-2">${item.description}</p>
+                        <button onclick="openPlayView('${item.id}')" class="bg-bevo-red hover:bg-bevo-darkRed text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition-all shadow-lg shadow-bevo-red/30">
+                            <i class="fa-solid fa-play"></i> Reba Hano (Play Now)
+                        </button>
+                    </div>
+                `;
+                container.appendChild(slide);
+
+                // Indicator Dot
+                const dot = document.createElement('button');
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${index === 0 ? 'bg-bevo-red w-6' : 'bg-white/40'}`;
+                dot.id = `slider-dot-${index}`;
+                dot.onclick = () => jumpToSlide(index);
+                indicators.appendChild(dot);
+            });
+        }
+
+        function startAutoSlider() {
+            if (sliderInterval) clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+                const featuredCount = MOCK_DATA.filter(item => item.isFeatured).slice(0, 5).length;
+                const nextIndex = (currentSlideIndex + 1) % featuredCount;
+                jumpToSlide(nextIndex);
+            }, 5000); // Rotates every 5 seconds per requirement
+        }
+
+        function jumpToSlide(index) {
+            const featuredCount = MOCK_DATA.filter(item => item.isFeatured).slice(0, 5).length;
+            
+            // Hide previous slide
+            const prevSlide = document.getElementById(`featured-slide-${currentSlideIndex}`);
+            const prevDot = document.getElementById(`slider-dot-${currentSlideIndex}`);
+            if (prevSlide) {
+                prevSlide.classList.remove('opacity-100', 'z-10');
+                prevSlide.classList.add('opacity-0', 'z-0');
+            }
+            if (prevDot) prevDot.className = 'w-2.5 h-2.5 rounded-full bg-white/40 transition-all';
+
+            // Show current slide
+            currentSlideIndex = index;
+            const nextSlide = document.getElementById(`featured-slide-${currentSlideIndex}`);
+            const nextDot = document.getElementById(`slider-dot-${currentSlideIndex}`);
+            if (nextSlide) {
+                nextSlide.classList.remove('opacity-0', 'z-0');
+                nextSlide.classList.add('opacity-100', 'z-10');
+            }
+            if (nextDot) nextDot.className = 'w-6 h-2.5 rounded-full bg-bevo-red transition-all';
+        }
+
+        // RENDER CARDS GRIDS
+        function renderGrids() {
+            document.getElementById('recent-releases-grid').innerHTML = MOCK_DATA.map(item => createCardHTML(item)).join('');
+            document.getElementById('series-releases-grid').innerHTML = MOCK_DATA.filter(item => item.type === 'series').map(item => createCardHTML(item)).join('');
+            document.getElementById('movies-releases-grid').innerHTML = MOCK_DATA.filter(item => item.type === 'movie').map(item => createCardHTML(item)).join('');
+        }
+
+        function renderLibraryGrid() {
+            const container = document.getElementById('library-releases-grid');
+            const starredItems = MOCK_DATA.filter(item => starredIds.includes(item.id));
+            
+            if (starredItems.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-zinc-500 space-y-2">
+                        <i class="fa-regular fa-star text-4xl text-zinc-700"></i>
+                        <p class="text-sm">Nta filime n'imwe uraha akamenyetso ka Star.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = starredItems.map(item => createCardHTML(item)).join('');
+            }
+        }
+
+        // RENDER INTERPRETERS LIST (STRICTLY NO PROFILE PHOTOS PER SPECIFICATION)
+        function renderInterpreters() {
+            const container = document.getElementById('interpreters-list-grid');
+            container.innerHTML = INTERPRETERS.map(interp => `
+                <div class="bg-bevo-card border border-zinc-800 rounded-xl p-5 hover:border-bevo-red transition-all flex flex-col justify-between space-y-3">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-bevo-red/20 text-bevo-red flex items-center justify-center font-bold text-xs">
+                                <i class="fa-solid fa-microphone"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">${interp.name}</h3>
+                        </div>
+                        <p class="text-xs text-zinc-400 leading-relaxed">${interp.bio}</p>
+                    </div>
+                    <button onclick="filterByTranslator('${interp.name}')" class="text-xs text-bevo-red hover:underline font-semibold flex items-center gap-1">
+                        Reba filime ze <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // CARD TEMPLATE CREATOR
+        function createCardHTML(item) {
+            const isStarred = starredIds.includes(item.id);
+            return `
+                <div class="group bg-bevo-card border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-all flex flex-col justify-between">
+                    <div class="relative aspect-[2/3] overflow-hidden cursor-pointer" onclick="openPlayView('${item.id}')">
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-bevo-red text-white flex items-center justify-center shadow-lg shadow-bevo-red/50">
+                                <i class="fa-solid fa-play ml-1"></i>
+                            </div>
+                        </div>
+                        <div class="absolute top-2 left-2 flex flex-col gap-1">
+                            <span class="bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-white/10">
+                                ${item.type}
+                            </span>
+                        </div>
+                        <button onclick="event.stopPropagation(); toggleStarCard('${item.id}')" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md text-yellow-500 flex items-center justify-center border border-white/10 hover:bg-black">
+                            <i class="${isStarred ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                        </button>
+                    </div>
+                    <div class="p-3 space-y-1">
+                        <span class="text-[10px] text-bevo-red font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-microphone text-[9px]"></i> ${item.translator}
+                        </span>
+                        <h3 class="text-sm font-bold text-white line-clamp-1 cursor-pointer hover:text-bevo-red" onclick="openPlayView('${item.id}')">${item.title}</h3>
+                    </div>
+                </div>
+            `;
+        }
+
+        // OPEN PLAY VIEW & MOVIE DETAILS
+        function openPlayView(contentId) {
+            currentContent = MOCK_DATA.find(item => item.id === contentId);
+            if (!currentContent) return;
+
+            switchTab('play');
+
+            // Video Player
+            const videoPlayer = document.getElementById('main-video-player');
+            const videoSource = document.getElementById('video-source');
+
+            document.getElementById('play-title').innerText = currentContent.title;
+            document.getElementById('play-translator-name').innerText = currentContent.translator;
+            document.getElementById('play-description').innerText = currentContent.description;
+            document.getElementById('play-type-badge').innerText = currentContent.type;
+
+            const seriesWrapper = document.getElementById('series-episodes-wrapper');
+            if (currentContent.type === 'series' && currentContent.episodes && currentContent.episodes.length > 0) {
+                seriesWrapper.classList.remove('hidden');
+                renderEpisodesList(currentContent.episodes);
+                videoSource.src = currentContent.episodes[0].videoUrl;
+            } else {
+                seriesWrapper.classList.add('hidden');
+                videoSource.src = currentContent.videoUrl;
+            }
+
+            videoPlayer.load();
+
+            // Action Buttons
+            document.getElementById('play-download-btn').href = currentContent.videoUrl;
+            updatePlayStarState();
+
+            // Render Related Data
+            renderModalComments(currentContent.id);
+            renderModalRecommended(currentContent.type);
+        }
+
+        // EPISODE SELECTOR FOR SERIES
+        function renderEpisodesList(episodes) {
+            const container = document.getElementById('episodes-buttons-container');
+            document.getElementById('episodes-count-badge').innerText = `${episodes.length} Episodes`;
+
+            container.innerHTML = episodes.map((ep, idx) => `
+                <button onclick="playEpisode('${ep.videoUrl}', this)" class="ep-btn bg-zinc-800 hover:bg-bevo-red text-white text-xs font-semibold p-2.5 rounded-lg text-left transition-all line-clamp-1 border border-zinc-700 ${idx === 0 ? 'bg-bevo-red border-bevo-red' : ''}">
+                    S${ep.season} E${ep.episode}: ${ep.title}
+                </button>
+            `).join('');
+        }
+
+        function playEpisode(videoUrl, btnElement) {
+            document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('bg-bevo-red', 'border-bevo-red'));
+            btnElement.classList.add('bg-bevo-red', 'border-bevo-red');
+
+            const videoPlayer = document.getElementById('main-video-player');
+            const videoSource = document.getElementById('video-source');
+            videoSource.src = videoUrl;
+            videoPlayer.load();
+            videoPlayer.play();
+        }
+
+        // STAR SYSTEM LOGIC
+        function toggleStarCard(contentId) {
+            if (starredIds.includes(contentId)) {
+                starredIds = starredIds.filter(id => id !== contentId);
+            } else {
+                starredIds.push(contentId);
+            }
+            localStorage.setItem('bevo_starred_list', JSON.stringify(starredIds));
+            renderGrids();
+            if (activeTab === 'library') renderLibraryGrid();
+        }
+
+        function toggleCurrentStar() {
+            if (!currentContent) return;
+            toggleStarCard(currentContent.id);
+            updatePlayStarState();
+        }
+
+        function updatePlayStarState() {
+            if (!currentContent) return;
+            const isStarred = starredIds.includes(currentContent.id);
+            const starIcon = document.getElementById('play-star-icon');
+            if (isStarred) {
+                starIcon.className = 'fa-solid fa-star text-yellow-500';
+            } else {
+                starIcon.className = 'fa-regular fa-star';
+            }
+        }
+
+        // SHARE LINK FUNCTIONALITY
+        function shareCurrentContent() {
+            if (!currentContent) return;
+            const shareUrl = window.location.href;
+            navigator.clipboard.writeText(shareUrl);
+            alert(`Link ya film "${currentContent.title}" yakopewe neza! Urashobora kuyisangiza abandi.`);
+        }
+
+        // RECOMMENDED CONTENT
+        function renderModalRecommended(type) {
+            const container = document.getElementById('recommended-grid');
+            const recommendedList = MOCK_DATA.filter(item => item.type === type && item.id !== currentContent.id).slice(0, 4);
+
+            container.innerHTML = recommendedList.map(item => `
+                <div onclick="openPlayView('${item.id}')" class="cursor-pointer group bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden p-1.5 hover:border-bevo-red transition-all">
+                    <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-24 object-cover rounded mb-1.5 group-hover:scale-105 transition-transform">
+                    <h4 class="text-xs font-bold text-white line-clamp-1">${item.title}</h4>
+                    <p class="text-[10px] text-zinc-400">${item.translator}</p>
+                </div>
+            `).join('');
+        }
+
+        // COMMENTS SECTION
+        function renderModalComments(contentId) {
+            const container = document.getElementById('comments-container');
+            const comments = commentsDatabase[contentId] || [];
+
+            if (comments.length === 0) {
+                container.innerHTML = '<p class="text-xs text-zinc-500 italic">Baye aba mbere gutanga igitecyerezo kuri iyi filime.</p>';
+                return;
+            }
+
+            container.innerHTML = comments.map(c => `
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs space-y-1">
+                    <span class="font-bold text-bevo-red">${c.user}</span>
+                    <p class="text-zinc-300">${c.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function handlePostComment(event) {
+            event.preventDefault();
+            if (!currentContent) return;
+
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (!commentsDatabase[currentContent.id]) {
+                commentsDatabase[currentContent.id] = [];
+            }
+
+            commentsDatabase[currentContent.id].unshift({
+                user: 'Umukoresha (You)',
+                text: text
+            });
+
+            localStorage.setItem('bevo_comments', JSON.stringify(commentsDatabase));
+            input.value = '';
+            renderModalComments(currentContent.id);
+        }
+
+        // SEARCH FILTERING LOGIC
+        function handleSearch(query) {
+            const searchSection = document.getElementById('search-section');
+            const searchGrid = document.getElementById('search-results-grid');
+            
+            if (!query || query.trim().length < 2) {
+                searchSection.classList.add('hidden');
+                return;
+            }
+
+            const filtered = MOCK_DATA.filter(item => 
+                item.title.toLowerCase().includes(query.toLowerCase()) || 
+                item.translator.toLowerCase().includes(query.toLowerCase())
+            );
+
+            searchSection.classList.remove('hidden');
+
+            if (filtered.length === 0) {
+                searchGrid.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-zinc-500 text-xs">
+                        Nta filime ibonetse ihuye n'ibyo ushakishije "${query}".
+                    </div>
+                `;
+            } else {
+                searchGrid.innerHTML = filtered.map(item => createCardHTML(item)).join('');
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('global-search').value = '';
+            document.getElementById('search-section').classList.add('hidden');
+        }
+
+        function filterByTranslator(translatorName) {
+            switchTab('home');
+            const searchInput = document.getElementById('global-search');
+            searchInput.value = translatorName;
+            handleSearch(translatorName);
+        }
+    </script>
+</body>
+</html>
